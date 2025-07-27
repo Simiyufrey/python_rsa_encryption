@@ -35,11 +35,24 @@ def should_skip(path):
 #             print(file_path)
 
 
+count = 0
 def fast_scan(path):
+    global count
+
+
     try:
+        files_to_check = ["pdf","PDF","docx"]
         with os.scandir(path) as entries:
             for entry in entries:
-                if entry.is_dir(follow_symlinks=False):
+                if entry.is_file():
+                    if(os.path.basename(entry).split(".")[-1] in files_to_check):
+
+                        print(f" {entry.path} file found")
+                        count += 1
+
+                elif entry.is_dir(follow_symlinks=False):
+               
+
                     if not should_skip(entry.path):
                         fast_scan(entry.path)
                 else:
@@ -48,6 +61,10 @@ def fast_scan(path):
         pass  # Skip directories you cannot access
 
 
-for drive in drives:
+# for drive in drives:
 
-    fast_scan(drive)
+#     print(drive)
+
+fast_scan("E:\\")
+
+print(f"{count} Total files")
